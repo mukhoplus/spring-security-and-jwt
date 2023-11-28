@@ -1,12 +1,15 @@
 package com.cos.jwt.config.auth;
 
 import com.cos.jwt.model.User;
+import com.fasterxml.jackson.annotation.JacksonInject;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Data
 public class PrincipalDetails implements UserDetails {
 
     private User user;
@@ -20,7 +23,7 @@ public class PrincipalDetails implements UserDetails {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
         user.getRoleList().forEach(r -> {
-            authorities.add(() -> r);
+            authorities.add(()->{ return r;});
         });
 
         return authorities;
@@ -28,12 +31,12 @@ public class PrincipalDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return this.user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return this.user.getUsername();
     }
 
     @Override
@@ -56,4 +59,7 @@ public class PrincipalDetails implements UserDetails {
         return true;
     }
 
+    public User getUser() {
+        return this.user;
+    }
 }
